@@ -3,7 +3,7 @@ Grabadora digital en formato TAP/TZX para ordenadores de 8 bits
 -----
 
 ![plot](./doc/powadcr_sp.jpg)
-Este proyecto pretende implementar una grabadora digital (para reproducir ficheros TAP/TZX y grabar archivos en ficheros TAP) para máquinas ZX Spectrum, ZX Next y N-Go y clones compatibles basada en la placa de desarrollo AudioKit ESP32 y usando una pantalla HMI tactil de 3,5".
+Este proyecto pretende implementar una grabadora digital (para reproducir ficheros TAP/TZX y grabar archivos en ficheros TAP) para máquinas ZX Spectrum, ZX Next y N-Go y clones compatibles, basada en la placa de desarrollo AudioKit ESP32 y usando una pantalla HMI tactil de 3,5".
 
 Ésta placa que se muestra a continuación, ESP32 Audio Kit fabricada por AI-Thinker Technology, va equipada con un microcontrolador ESP32 v3 y un procesador de audio ES8388 y que sirve para éste propósito.
 
@@ -40,11 +40,15 @@ Este proyecto necesita configurar los interruptores pintegrados en la placa de l
 
 ## Pantalla LCD
 
-La pantalla táctil LCD elegida para este proyecto es un módulo de pantalla LCD TFT HMI Touch conectado con 2 pines seriales (TX y RX) a la placa.
+La pantalla táctil LCD elegida para este proyecto es de la marca TJC. Es un módulo de pantalla LCD TFT HMI tactil compatible Nextion que se conecta con 2 pines seriales (TX y RX) a la placa.
 + Marca: TJC
 + Modelo: TJC4832T035_011
 + Tamaño: 3,5".
 + Resolución: 480x320.
+
+Al ser una pantalla compatible con Nextion el funcionamiento es idéntico a la pantalla original. Los proyectos funcionan igual, pero solo es posible abrir con la aplicacion USART HMI de TJC los proyectos que hayan sido generados por esta misma aplicación. No es posible abrir proyectos de Nextion con la aplicación de TJC ni abrir proyectos de TJC con la aplicación original de Nextion aunque en el fondo se trata de la misma aplicación. Han querido hacer los editores HMI incompatibles entre sí aunque una vez compilados eel fichero TFT resultante se puede instalar indistintamente en una pantalla TJC o Nextion.
+
+Actualmente la aplicación USART HMI de TJC sólo se encuentra en Chino, mientras que la aplicación original de Nexion está en Inglés.
 
 ## Estructura de ficheros TAP para Sinclair ZX Spectrum.
 
@@ -126,6 +130,7 @@ En primer lugar voy a describir cómo deben conectarse los elementos descritos e
 |RX|TX|
 |TX|RX|
 |+5V|3V3|
+
 Como se puede observar hay dos pines en la placa AudioKit marcados con 3V3. Cualquiera de los dos puede conectarse a los 5v del conector de la pantalla.
 
 La placa de AudioKit internamente funciona a 3,3v por lo que se le está suministrando a la pantalla una tensión que no es la que corresponde porque la pantalla funciona a 5v. Ésto no afecta a su funcionamiento, pero en ocasiones puede producir un parpadeo que puede ser molesto.
@@ -184,28 +189,43 @@ How .bin firmware is uploaded in ESP32-A1S Audiokit?
 -----
 Hay dos formas de realizar éste proceso :
 
-1. Usando Visual Studio Code : Este es el método más fácil para compilar los fuentes de éste proyecto y al mismo tiempo subir el firmware en un solo paso. Para ésto debemos hacer lo siguiente :
+1. Usando Visual Studio Code (en adelante VSC) : Este es el método más fácil para compilar los fuentes de éste proyecto y al mismo tiempo subir el firmware en un solo paso. Para ésto debemos hacer lo siguiente :
 + Instalar Visual Studio Code y una vez instalado se deben instalar las extensiones C/C++, CMAKE y CMAKE Tools
-+ 
++ Instalar el controlador Silicon Labs CP210x USB Bridge para que la placa se detecte y añada un puerto COM nuevo. El enlace es siguiente : [https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers]
++ Una vez instalado todo lo anterior conectar un cable microUSB de datos al PC. Comprobad que al acceder al administrador de dispositivos se ha añadido un puerto COM.
++ Abrir el VSC, abrir la carpeta del proyecto, buscar el fichero platformio.ini y en las variables upload_port y monitor_port (lineas 21 y 22) debe aparecer el puero COM que se ha detectado al conectar la placa. Si el que esta puesto no es el que se ha detectado hay que modificar ambas variables poniendo el puerto COM correcto y hacer un Save All.
++ Una vez corregido pinchamos en el ultimo botón de la parte izquierda de la pantalla, que es el de la extensión PlatForm.io y aparecerán dos apartados. Debemos desplegar el que se llama esp32devCOM. Tras unos segundos debe aparecer una carpeta llamada General y dentro de ella hay varias opciones Una de ellas es Build. Ésta opción compila los fuentes generando un fichero firmware.bin dentro de la carpeta .pio\build\esp32devCOM del proyecto. La otra opción que nos interesa es Upload, que hace lo mismo que Build, pero a continuación sube el firmware a la placa. Una vez que se ha llegado al 10% la placa ya tiene el firmware instalado.
 
-1. Install Arduino IDE 2.0
-2. Apply this BOARD repository to Arduino IDE preferences.
-   - https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+**IMPORTANTE :**
 
-3. Connect the ESP32 Audiokit USART USB port to any USB PC port
-4. Set board as "ESP32 DEV MOD" and select correct COM port
+***Si tras compilar el VSC no detecta la placa aunque el controlador esté bien instalado y está configurado el puerto COM correcto en el platformio.ini significa que hay que pulsar el botón BOOT de la placa AudioKit una vez finalizada la compilación para que el firmware se pueda instalar en ella.***
 
-Required libraries:
-- SdFat (https://github.com/greiman/SdFat)
-- arduino-audiokit (https://github.com/pschatzmann/arduino-audiokit/tree/main)
+***Esto sólo ocurrirá cuando hayamos adquirido una placa que no es original de AI-Thinker.***
 
-How firmware is loaded in TJC LCD?
+¿Cómo se carga el firmware en la pantalla TJC?
 -----
-(in progress)
+El firmware de la pantalla tiene dos maneras de instalarse : a través de un dispositivo USB TTL o introduciendo su firmware en una tarjeta SD e insertarla en el lector que incorpora la pantalla. Solo vamos a describir la segunda opción ya que la pantalla no tiene instalados los conectores del puerto UART al que se debía conectar el USB-TTL.
 
-What PowaDCR beta version is able to do?
+En la carpeta del proyecto se encuentra una carpeta llamada HMI, y dentro de ella escogeremos la que se llama "powadcr_ifaceTJC - ZX - mode 2". Dentro de ella hay una carpeta llamada build en la que se encuentra un fichero con extensión HMI. Este fichero es el fuente del proyecto de la pantalla por si deseamos modificarlo con el editor HMI de TJC mencionado en la lista de materiales.  En la carpeta build se encuentra el firmware compilado con el nombre 'powadcr_iface.tft' y este es el fichero que debemos copiar a la tarjeta SD para que la pantalla se actualice. La SD deberá estar formateada en FAT32 y es conveniente que el firmware sea el unico contenido que tenga esta tarjeta SD. El firmware se instalará en el momento que pongamos tensión a la pantalla en los pines correspondientes (GND y +5v) y la pantalla no debe tener conectados los pines TX y RX a la placa del AudioKit. La tensión puede sacarse de la placa del AudioKit o bien de cualquier fuente que no sea de más de 5v. En cualquiera de los casos verificar la polaridad antes de meter tensión ya que se puede dañar la pantalla.
+
+¿Qué puede hacer la versión beta de PowaDCR?
 -----
-(in progress)
+***Esta sección puede sufrir cambios a medida que el proyecto vaya avanzando y puede haber funciones que se vayan añadiendo o quitando en función de las necesidades del proyecto.***
+
+Actualmente el POWADCR cuenta con las siguientes funciones :
++ Carga de ficheros TAP y TZX para ZX Spectrum 48k, +, 128, +2, +3, ZX Next, N-Go y cualquier otra FPGA que corra los cores de Spectrum y/o ZX Next y que tenga habilitada la carga por audio
++ Carga de ficheros TSX para cualquier ordenador MSX independientemente de la marca y modelo.
++ Soporte de ficheros TZX con bloques 0x15.
++ Soporte de ficheros TZX con rutinas de carga especiales como Speedlock y otros sistemas de carga rápida.
++ Control de Volumen independiente de los canales derecho e izquierdo.
++ Selección de señal Mono/Estéreo
++ Selección de frecuencia de la señal de salida.
++ Grabación en formato TAP de cualquier programa que sea de carga normal y siempre que los bloques tengan cabecera.
++ Activación de detección de silencios tras el final de bloque.
++ Activación de bucle al grabar (la señal que entra por la entrada de la placa se reproduce por la señal de salida).
++ Filtrado de señal por software. Si no se selecciona el filtro por defecto es de un 10%, pero se recomiuenda que éste filtro se acrive al 20% al realizar cualquier tipo de grabación.
++ Servidor Web integrado para realizar la actualización del firmware de la placa.
++ Detección del firmware de la pantalla enla SD de la placa, que permite que se actualice el firmware de la pantalla sin tener que desmontarla ni tener que acceder a la SD de la pantalla
 
 If you enjoy with this device and you want to colaborate, please.
 
