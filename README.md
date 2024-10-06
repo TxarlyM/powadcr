@@ -73,11 +73,11 @@ Donde: TONO GUÍA (2168 T-States) tiene dos tipos de longitud.
 
 **¿Qué significa T-State?**
 
-Éste concepto puede ser difícil de entender, pero no está lejos de la realidad, ya que resumido, un pulso completo (dos picos, uno alto y otro bajo) tiene un período igual al tiempo "2 x n T-State", donde T-State = 1/3,5 MHz = 0,28571 us, por ejemplo: TONO LÍDER GRANDE.
+Éste concepto puede ser difícil de entender, pero no está lejos de la realidad, ya que resumido, un pulso completo (dos picos, uno alto y otro bajo) tiene un período igual al tiempo "2 x n T-State", donde T-State = 1/3,5 MHz = 0,28571 us, por ejemplo: TONO GUÍA GRANDE.
 
 + TONO GUÍA = 2168 x 8063 T-States = 17480584 T-States
 + 1 T-State = 1 / 3,5 MHz = 0,28571 us = 0,00000028571 s
-+ Duración del TONO LÍDER = 17480584 x 0,00000028571 s = 4,98 s
++ Duración del TONO GUÍA = 17480584 x 0,00000028571 s = 4,98 s
 
 **¿Cuántos picos tiene el tren de pulsos del TONO GUÍA GRANDE?**
 
@@ -117,7 +117,7 @@ Por lo tanto, se deben quitar ambos micrófonos integrados. desoldándolos o bie
 
 ¿Cómo se conectan las piezas de PowaDCR?
 -----
-Para que la placa y la pantalla funcionen hay que instalar el firmware correspondiente antes de proceder a conectarlos entre sí, por lo que debési saltar éste apartado y realizarlo una vez estén la placa y la pantalla lo tengan instalado.
+Para que la placa y la pantalla funcionen hay que instalar el firmware correspondiente antes de proceder a conectarlos entre sí, por lo que debéis saltar éste apartado y realizarlo una vez estén la placa y la pantalla lo tengan instalado.
 
 En primer lugar voy a describir cómo deben conectarse los elementos descritos en la lista de materiales. Si es posible ésto debe hacerse en el orden que se indica aquí : 
 
