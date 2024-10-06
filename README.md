@@ -14,7 +14,7 @@ https://docs.ai-thinker.com/en/esp32-audio-kit
 El resumen de especificaciones es el siguiente:
 + CPU 32 bits a 240 MHz
 + 512 KB + 4 MB de SRAM (PSRAM disponible)
-+ 2 NÚCLEOS
++ 2 Núcleos
 + Procesador de audio dedicado ES8388
 + Entrada/salida de audio
 + Bluetooth
