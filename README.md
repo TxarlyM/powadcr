@@ -1,37 +1,35 @@
 # POWADCR
-TAP/TZX Digital cassette recorder for 8-bit machines
+Grabadora digital en formato TAP/TZX para ordenadores de 8 bits
 -----
 
 ![plot](./doc/powadcr_sp.jpg)
-This project pretend to implement a Digital Cassette Recorder (for TAP/TZX files playing and recording on TAP) for ZX Spectrum machines based on ESP32 Audio kit development board and using HMI over touch 3.5" screen.
+Este proyecto pretende implementar una grabadora digital (para reproducir ficheros TAP/TZX y grabar archivos en ficheros TAP) para máquinas ZX Spectrum, ZX Next y N-Go y clones compatibles basada en la placa de desarrollo AudioKit ESP32 y usando una pantalla HMI tactil de 3,5".
 
-The launcher was this board below, ESP32 Audio Kit equipped with ESP32 v3 microcontroller and ES8388 Audio proccesor 
-made by AI-Thinker Technology.
+Ésta placa que se muestra a continuación, ESP32 Audio Kit fabricada por AI-Thinker Technology, va equipada con un microcontrolador ESP32 v3 y un procesador de audio ES8388 y que sirve para éste propósito.
 
 ![plot](./doc/audiokit.png)
 
 https://docs.ai-thinker.com/en/esp32-audio-kit
 
-The summary of specifications is.
-+ CPU 32 bits at 240MHz
-+ 512KB + 4MB SRAM (PSRAM available)
-+ 2 CORES
-+ ES8388 dedicated audio proccesor
-+ Audio IN/OUT
+El resumen de especificaciones es el siguiente:
++ CPU 32 bits a 240 MHz
++ 512 KB + 4 MB de SRAM (PSRAM disponible)
++ 2 NÚCLEOS
++ Procesador de audio dedicado ES8388
++ Entrada/salida de audio
 + Bluetooth
 + WiFi
-+ 8 switch buttons
-+ I/O connectors
-+ SD slot
-+ ...
++ 8 botones de conmutación
++ Conectores de E/S
++ Ranura SD
++ Módulo de carga de baterías LiPo
 
-So, it's a beautiful develop board with a big possibilities. 
+Es una placa de desarrollo con grandes posibilidades, aunque el uso al que se enfocaba era muy distinto al que se propone este proyecto. 
 
-To begin with is necessary use the Phil Schatzmann's libraries for ESP32 Audio Kit v.0.65 (https://github.com/pschatzmann/arduino-audiokit) where we could take advantage of all resources of this kit, to create a digital player and recorder for ZX Spectrum easilly, or this is the first idea.
+Para empezar es necesario utilizar las librerías de Phil Schatzmann para ESP32 Audio Kit v.0.65 (https://github.com/pschatzmann/arduino-audiokit) donde podremos aprovechar todos los recursos de este kit, para crear un reproductor y grabador digital para ZX Spectrum fácilmente, o esta es la primera idea.
 
-This project need set PCB switches to
-
-|Switch|Value|
+Este proyecto necesita configurar los interruptores pintegrados en la placa de la siguiente manera :
+|Switch|Valor|
 |---|---|
 |1|On|
 |2|On|
@@ -40,75 +38,106 @@ This project need set PCB switches to
 |5|Off|
 
 
-## LCD Screen Display
+## Pantalla LCD
 
-The LCD touch screen display chosen for this project is a TFT HMI LCD Display Module Screen Touch connected with 2 serial pins (TX and RX) to the board. 
-+ Brand: TJC
-+ Model: TJC4832T035_011
-+ Size: 3.5".
-+ Resolution:  480x320.
+La pantalla táctil LCD elegida para este proyecto es un módulo de pantalla LCD TFT HMI Touch conectado con 2 pines seriales (TX y RX) a la placa.
++ Marca: TJC
++ Modelo: TJC4832T035_011
++ Tamaño: 3,5".
++ Resolución: 480x320.
 
-## About Sinclair ZX Spectrum TAP structure.
+## Estructura de ficheros TAP para Sinclair ZX Spectrum.
 
 -----
 
-About loading proccess in Sinclair ZX Spectrum
+Proceso de carga en Sinclair ZX Spectrum
 -----
-I recomend the Alessandro Grussu's website with an interesting information about the loading process and processor timming for this goal. https://www.alessandrogrussu.it/tapir/tzxform120.html#MACHINFO
+Recomiendo el sitio web de Alessandro Grussu con información interesante sobre el proceso de carga y el tiempo de procesamiento para este objetivo. Éste es el Link de su página : https://www.alessandrogrussu.it/tapir/tzxform120.html#MACHINFO
 
-Now, I'd like to show you how the signal generated from TAP file that Sinclair ZX Spectrum is able to understand. The mechanism to read the audio signal is based on squarewave peaks counting, using the Z80 clock timming, then:
+Ahora, me gustaría mostrarles cómo la señal generada a partir del archivo TAP que Sinclair ZX Spectrum puede entender. El mecanismo para leer la señal de audio se basa en el conteo de picos de onda cuadrada, utilizando el tiempo de reloj Z80, luego:
 
-The sequence for ZS Spectrum, is always for standard loading: 
-+ LEADER TONE + SYNC1 + SYNC2 + DATA SEQUENCE + SILENT
+La secuencia para ZX Spectrum, es siempre para carga estándar:
 
-<br>Where: LEADER TONE (2168 T-States) is two kind of length. 
-+ Large (x 8063 T-States) for typical "PROGRAM" block (BASIC)
-+ Short (x 3223 T-States) for typical "BYTE" block, Z80 machine code.</br>
++ TONO GUÍA + SYNC1 + SYNC2 + BLOQUE DE DATOS + SILENCIO
+
+Donde: TONO GUÍA (2168 T-States) tiene dos tipos de longitud.
+
++ Grande (x 8063 T-States) para el bloque "PROGRAMA" típico (BASIC)
++ Corto (x 3223 T-States) para el bloque "BYTE" típico, código máquina de Z80.
 
 ![plot](./doc/squarewave_train.png)
 
-**What means T-State?**
+**¿Qué significa T-State?**
 
-Well, this concept could be difficult to understand, but it's not far of reallity, as summarized full pulse (two peaks one to high and one to low) has a period equal to "2 x n T-State" time, where T-State = 1/3.5MHz = 0.28571 us, then for example: LARGE LEADER TONE.
-+ LEADER TONE = 2168 x 8063 T-States = 17480584 T-States
-+ 1 T-State = 1 / 3.5MHz = 0.28571 us = 0.00000028571 s
-+ LEADER TONE duration = 17480584 x 0.00000028571 s = 4.98s
+Éste concepto puede ser difícil de entender, pero no está lejos de la realidad, ya que resumido, un pulso completo (dos picos, uno alto y otro bajo) tiene un período igual al tiempo "2 x n T-State", donde T-State = 1/3,5 MHz = 0,28571 us, por ejemplo: TONO LÍDER GRANDE.
 
-**How many peaks has the LARGE LEADER TONE pulse train?**
-+ The pulse train has 2168 peaks in both cases but short leader tone has a different duration (3223 T-States) versus large leader tone (8063 T-States)
++ TONO GUÍA = 2168 x 8063 T-States = 17480584 T-States
++ 1 T-State = 1 / 3,5 MHz = 0,28571 us = 0,00000028571 s
++ Duración del TONO LÍDER = 17480584 x 0,00000028571 s = 4,98 s
 
-**What's the signal frequency?**
-+ We know that LARGE LEADER TONE pulse train is 4.98s 
-+ We know that SHORT LEADER TONE pulse train is 1.99s
-+ The frecuency for both leader tones (2168 x 0.00000028571) / 2 = 809.2Hz
+**¿Cuántos picos tiene el tren de pulsos del TONO GUÍA GRANDE?**
 
-About POWADCR Device.
++ El tren de pulsos tiene 2168 picos en ambos casos, pero el tono líder corto tiene una duración diferente (3223 estados T) en comparación con el tono líder grande (8063 estados T)
+
+**¿Cuál es la frecuencia de la señal?**
+
++ Sabemos que el tren de pulsos del TONO GUÍA GRANDE dura 4,98 s
++ Sabemos que el tren de pulsos del TONO GUÍA CORTO dura 1,99 s
++ La frecuencia de ambos tonos líderes (2168 x 0,00000028571) / 2 = 809,2 Hz
+
+Acerca del dispositivo POWADCR
 -----
-In this section we are going to describe parts to be needed to assemble the PowaDCR device.
+En esta sección describiremos las piezas necesarias para ensamblar el dispositivo PowaDCR.
 
-**Bill of material**
-+ Main board: ESP32 Audiokit by AI-Thinker technology : https://docs.ai-thinker.com/en/esp32-audio-kit (Possible buy site. Alliexpress)
-+ Color LCD 3.5" 480x320 pixels. Resistive TouchScreen - TJC4832T035_011 resistive (low priced but possible to discontinued and replaced by TJC4832T135 _ 011C capacitive or TJC4832T135 _ 011R resistive)
-+ Cable XH2.5 to dupont to connecto LCD to the extended port of ESP32 Audiokit
-+ Battery 2000mAh 3.7v (optional not needed)
-+ Micro SD card FAT32 formatted (to contain all ZX Spectrum games in TAP and other formats to be red for PowaDCR in the future)
-+ Micro SD card or FT232RL FTDI serial interface to program the TJC LCD (both methods are available)
-+ Cable with jacks Stereo-stereo male-male 3.5mm to connect PowaDCR to Spectrum Next or N-Go or clone versions.
-+ Cable with XH2.5 and mono jack 3.5mm to connect from amplifier out of PowaDCR to EAR connector on ZX Spectrum classic versions (Rubber keyboard 16K, 48K, Spectrum+ and Spectrum 128K Toastrack)
-+ HMI Chinesse editor version https://unofficialnextion.com/t/tjc-usart-hmi-editor-1-64-1/1511
-+ Arduino IDE 2.0
+Lista de materiales
 
-Hacking the Audiokit board.
++ Placa base: ESP32 Audiokit de AI-Thinker technology: https://docs.ai-thinker.com/es/esp32-audio-kit (Posible sitio de compra. Alliexpress)
++ LCD color de 3,5" 480x320 píxeles. Pantalla táctil resistiva - TJC4832T035_011 resistiva (de bajo precio pero posible descontinuación y sustitución por TJC4832T135_011C capacitiva o TJC4832T135_011R resistiva)
++ Cable XH2.5 a dupont para conectar el LCD al puerto extendido del ESP32 Audiokit
++ Batería 2000mAh 3.7v (opcional no necesaria)
++ Tarjeta micro SD formateada FAT32 (para contener todos los juegos del ZX Spectrum en TAP y otros formatos para ser utilizados en PowaDCR en el futuro)
++ Tarjeta Micro SD o interfaz serial FTDI FT232RL para programar el LCD TJC (ambos métodos están disponibles)
++ Cable con conectores estéreo-estéreo macho-macho de 3,5 mm para conectar PowaDCR a Spectrum Next o N-Go o versiones clónicas.
++ Cable con conector XH2.5 y mono de 3,5 mm para conectar desde la salida del amplificador de PowaDCR al conector EAR en las versiones clásicas de ZX Spectrum (teclado de goma 16K, 48K, Spectrum+ y Spectrum 128K Toastrack)
++ Versión del editor HMI en chino [http://filedown.tjc1688.com/USARTHMI/USARTHMIsetup_latest.zip]
++ Entorno Visual Studio Code con las extensiones C/C++, CMAKE y CMAKE Tools
+
+Hackeando la placa ESP32 Audiokit
 -----
-This board is build from the same design from AC101 audio chip version, but with ES8388 chip. In this case both mic and line-in are mixed. Not possible to select by independ way mic or line-in then the environment noise come in when the ZX Spectrum signal is capturing.
-So, it shall be removed both integrated microphones.
+Esta placa está construida a partir del mismo diseño de la versión con chip de audio AC101, pero con chip ES8388. En este caso, tanto el micrófono como la entrada de línea están mezclados. No es posible seleccionar de forma independiente el micrófono o la entrada de línea, ya que el ruido ambiental entra cuando se captura la señal del ZX Spectrum.
+
+Por lo tanto, se deben quitar ambos micrófonos integrados. desoldándolos o bien arrancandolos con un alicate adecuado.
 
 ![image](https://github.com/hash6iron/powadcr/assets/118267564/f47c2810-d573-4a8b-9608-7015e7462f15)
 
 
-How PowaDCR parts are connected?
+¿Cómo se conectan las piezas de PowaDCR?
 -----
-(in progress)
+Para que la placa y la pantalla funcionen hay que instalar el firmware correspondiente antes de proceder a conectarlos entre sí, por lo que debési saltar éste apartado y realizarlo una vez estén la placa y la pantalla lo tengan instalado.
+
+En primer lugar voy a describir cómo deben conectarse los elementos descritos en la lista de materiales. Si es posible ésto debe hacerse en el orden que se indica aquí : 
+
++ Conectar el cable incluído con la pantalla HMI de 3,5 en el conector J1 de la pantalla.
++ Desde ese conector salen 4 cables que deben conectarse en le puerto serie o UART del Audio Kit. Es importante conectarlos correctamente ya que es posible que la placa o la pantalla puedan resultar dañadas. El conector UART de la placa está situado en la parte superior del ESP32 AudioKit (un connector tipo Dupont de 14 pines) y en el que solo vamos a usar la fila superior de ese conector. De estos 7 pines sólo vamos a usar 4 : GND, TX, RX y 3V3. Las conexión entre placa y pantalla debe realizarse  según la siguiente tabla :
+
+|Pantalla|Pin AudioKit|
+|---|---|
+|GND|GND|
+|RX|TX|
+|TX|RX|
+|+5V|3V3|
+Como se puede observar hay dos pines en la placa AudioKit marcados con 3V3. Cualquiera de los dos puede conectarse a los 5v del conector de la pantalla.
+
+La placa de AudioKit internamente funciona a 3,3v por lo que se le está suministrando a la pantalla una tensión que no es la que corresponde porque la pantalla funciona a 5v. Ésto no afecta a su funcionamiento, pero en ocasiones puede producir un parpadeo que puede ser molesto.
+
+
+
+Hackeando la pantalla HMI
+-----
+La pantalla por defecto, como se ha mencionado antes, trabaja con un voltaje de 5v. Para poder hacer que la pantalla trabaje exclusivamente a 3,3v hay que hacer una pequeña modificación : Hay que localizar cerca del conector J1 dos contactos marcados como JP2 en los que no hay conectado nada. El fabricante debía haber colocado un conector de Dupont de 2 pines para poder insertar un Jumper si se desea hacer que la pantalla trabaje a 3,3v o no. Si vamos a usar ésta pantalla exclusivamente para el POWADCR lo que debemos hacer es poner un punto de estaño uniendo esos dos contactos ya que los agujeros no están hechos y no es posible poner un conector para el Jumper. Una vez unidos los contactos comprobaremos que la placa no tiene ese parpadeo mencionado antes.
+
+
+
 
 How .bin firmware is uploaded in ESP32-A1S Audiokit? 
 -----
@@ -151,8 +180,14 @@ How .bin firmware is uploaded in ESP32-A1S Audiokit?
 
 
 
-How custom firmware is uploaded in ESP32-A1S Audiokit? 
+¿Cómo se carga el firmware personalizado en ESP32-A1S Audiokit? 
 -----
+Hay dos formas de realizar éste proceso :
+
+1. Usando Visual Studio Code : Este es el método más fácil para compilar los fuentes de éste proyecto y al mismo tiempo subir el firmware en un solo paso. Para ésto debemos hacer lo siguiente :
++ Instalar Visual Studio Code y una vez instalado se deben instalar las extensiones C/C++, CMAKE y CMAKE Tools
++ 
+
 1. Install Arduino IDE 2.0
 2. Apply this BOARD repository to Arduino IDE preferences.
    - https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
