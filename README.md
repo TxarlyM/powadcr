@@ -50,9 +50,6 @@ Al ser una pantalla compatible con Nextion el funcionamiento es idéntico a la p
 
 Actualmente la aplicación USART HMI de TJC sólo se encuentra en Chino, mientras que la aplicación original de Nexion está en Inglés.
 
-## Estructura de ficheros TAP para Sinclair ZX Spectrum.
-
------
 
 Proceso de carga en Sinclair ZX Spectrum
 -----
@@ -110,7 +107,7 @@ Hackeando la placa ESP32 Audiokit
 -----
 Esta placa está construida a partir del mismo diseño de la versión con chip de audio AC101, pero con chip ES8388. En este caso, tanto el micrófono como la entrada de línea están mezclados. No es posible seleccionar de forma independiente el micrófono o la entrada de línea, ya que el ruido ambiental entra cuando se captura la señal del ZX Spectrum.
 
-Por lo tanto, se deben quitar ambos micrófonos integrados. desoldándolos o bien arrancandolos con un alicate adecuado.
+Por lo tanto, se deben quitar ambos micrófonos integrados, desoldándolos o bien arrancandolos con un alicate adecuado.
 
 ![image](https://github.com/hash6iron/powadcr/assets/118267564/f47c2810-d573-4a8b-9608-7015e7462f15)
 
@@ -142,59 +139,46 @@ Hackeando la pantalla HMI
 La pantalla por defecto, como se ha mencionado antes, trabaja con un voltaje de 5v. Para poder hacer que la pantalla trabaje exclusivamente a 3,3v hay que hacer una pequeña modificación : Hay que localizar cerca del conector J1 dos contactos marcados como JP2 en los que no hay conectado nada. El fabricante debía haber colocado un conector de Dupont de 2 pines para poder insertar un Jumper si se desea hacer que la pantalla trabaje a 3,3v o no. Si vamos a usar ésta pantalla exclusivamente para el POWADCR lo que debemos hacer es poner un punto de estaño uniendo esos dos contactos ya que los agujeros no están hechos y no es posible poner un conector para el Jumper. Una vez unidos los contactos comprobaremos que la placa no tiene ese parpadeo mencionado antes.
 
 
-
-
-How .bin firmware is uploaded in ESP32-A1S Audiokit? 
------
-1. Download ESP32 Flash Downloading Tool - https://www.espressif.com/en/support/download/other-tools?keys=&field_type_tid%5B%5D=13
-2. Unzip file and execute - flash_download_tool_x.x.x.exe file
-
-   See example image below.
-
-   ![image](https://github.com/hash6iron/powadcr_IO/assets/118267564/e7158518-4af8-4e6e-b4ab-eff6b9693307)
-
-   
-4. Select ESP32 model.
-   - ESP32
-   - Develop
-     And press "OK" button
-     
-     Show image below.
-     
-     ![image](https://github.com/hash6iron/powadcr_IO/assets/118267564/e9348bcb-2879-4872-8998-7e14c02b6f82)
-
-   
-5. Setting and begin the flash proccess.
-   - Select .bin file or write the path of it (see below lastest stable version)
-   - Select all parameters exactly at the image below.
-   - Connect ESP32-A1S Audiokit board from UART microUSB port (not power microUSB PORT) at PC USB port.
-   - Select the available COM for this connection in COM: field on ESP32 Flash Downloading Tool.
-   - Select BAUD: speed at 921600
-   - Disconnect the Touch Screen cable in order to release serial port (Audiokit sharing USB and UART communications)
-   - Press START button in ESP32 Flash Downloading Tool. Then downloading proccess begin, and wait for FINISH message. Enjoy!
-  
-     NOTES: If the proccess fail.
-      - Try to download again.
-      - Try to ERASE before START proccess.
-
-     lastest version: <a href="https://github.com/hash6iron/powadcr_IO/blob/main/powaDCR-ESP32-A1S-v0.3.15.bin">powaDCR-ESP32A1S-v0.3.15.bin</a>
-   
-   Show image below.
-   
-   ![image](https://github.com/hash6iron/powadcr_IO/assets/118267564/a595ea33-a1df-406e-b2af-a1d72680fb59)
-
-
-
 ¿Cómo se carga el firmware personalizado en ESP32-A1S Audiokit? 
 -----
 Hay dos formas de realizar éste proceso :
 
 1. Usando Visual Studio Code (en adelante VSC) : Este es el método más fácil para compilar los fuentes de éste proyecto y al mismo tiempo subir el firmware en un solo paso. Para ésto debemos hacer lo siguiente :
-+ Instalar Visual Studio Code y una vez instalado se deben instalar las extensiones C/C++, CMAKE y CMAKE Tools
-+ Instalar el controlador Silicon Labs CP210x USB Bridge para que la placa se detecte y añada un puerto COM nuevo. El enlace es siguiente : [https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers]
-+ Una vez instalado todo lo anterior conectar un cable microUSB de datos al PC. Comprobad que al acceder al administrador de dispositivos se ha añadido un puerto COM.
-+ Abrir el VSC, abrir la carpeta del proyecto, buscar el fichero platformio.ini y en las variables upload_port y monitor_port (lineas 21 y 22) debe aparecer el puero COM que se ha detectado al conectar la placa. Si el que esta puesto no es el que se ha detectado hay que modificar ambas variables poniendo el puerto COM correcto y hacer un Save All.
-+ Una vez corregido pinchamos en el ultimo botón de la parte izquierda de la pantalla, que es el de la extensión PlatForm.io y aparecerán dos apartados. Debemos desplegar el que se llama esp32devCOM. Tras unos segundos debe aparecer una carpeta llamada General y dentro de ella hay varias opciones Una de ellas es Build. Ésta opción compila los fuentes generando un fichero firmware.bin dentro de la carpeta .pio\build\esp32devCOM del proyecto. La otra opción que nos interesa es Upload, que hace lo mismo que Build, pero a continuación sube el firmware a la placa. Una vez que se ha llegado al 10% la placa ya tiene el firmware instalado.
+   - Instalar Visual Studio Code y una vez instalado se deben instalar las extensiones C/C++, CMAKE y CMAKE Tools
+   - Instalar el controlador Silicon Labs CP210x USB Bridge para que la placa se detecte y añada un puerto COM nuevo. El enlace es siguiente : [https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers]
+   - Una vez instalado todo lo anterior conectar un cable microUSB de datos al PC. Comprobad que al acceder al administrador de dispositivos se ha añadido un puerto COM al conectar el cable entre el ordenador y la placa.
+   - Abrir el VSC, abrir la carpeta del proyecto, buscar el fichero platformio.ini y en las variables upload_port y monitor_port (lineas 21 y 22) debe aparecer el puero COM que se ha detectado al conectar la placa. Si el que esta puesto no es el que se ha detectado hay que modificar ambas variables poniendo el puerto COM correcto y hacer un Save All.
+   - Una vez salvado el platformio.ini pinchamos en el ultimo botón de la parte izquierda de la pantalla, que es el de la extensión PlatForm.io y aparecerán dos apartados. Debemos desplegar el que se llama esp32devCOM. Tras unos segundos debe aparecer una carpeta llamada General y dentro de ella hay varias opciones Una de ellas es Build. Ésta opción compila los fuentes generando un fichero firmware.bin dentro de la carpeta .pio\build\esp32devCOM del proyecto. La otra opción que nos interesa es Upload, que hace lo mismo que Build, pero a continuación sube el firmware a la placa. Una vez que se ha llegado al 100% la placa ya tiene el firmware instalado.
+
+2. Utilizando la herramienta de Expressif
+
++ Descargue la herramienta de descarga de Flash ESP32: https://www.espressif.com/en/support/download/other-tools?keys=&field_type_tid%5B%5D=13
++ Descomprima el archivo y ejecútelo: flash_download_tool_x.x.x.exe
+
+Vea la imagen de ejemplo a continuación.
+   ![image](https://github.com/hash6iron/powadcr_IO/assets/118267564/e7158518-4af8-4e6e-b4ab-eff6b9693307)
+
++ Tras abrir la aplicación las opciones deben estar configuradas de ésta manera
+   - Chip Type : ESP32
+   - WorkMode : Develop
+  
+     Tras pulsar el botón "OK" se muestra la siguiente pantalla :
+     
+     ![image](https://github.com/hash6iron/powadcr_IO/assets/118267564/e9348bcb-2879-4872-8998-7e14c02b6f82)
+
++ Configuración y comienzo del proceso de flash.
+  - Seleccione el archivo .bin o escriba la ruta del mismo (vea la última versión estable al final de éste apartado)
+   - Si la placa y la pantalla se encuentran conectados, desconecte el cable de la pantalla para liberar el puerto serie (Audiokit comparte comunicaciones USB y UART)
+   - Seleccione todos los parámetros exactamente como se muestra en la imagen a continuación.
+   - Conecte la placa Audiokit ESP32-A1S desde el puerto microUSB UART (no el puerto microUSB de alimentación) al puerto USB de la PC.
+   - Seleccione el COM disponible para esta conexión en el campo COM: en la herramienta de descarga de flash ESP32.
+   - Seleccione la velocidad en el campo BAUD: 921600. En el caso de que el procesi se interrumpa o no finalice probar con velocidades inferiores.
+   - Presione el botón START en la herramienta de descarga de flash ESP32. Luego, comience el proceso de descarga y espere el mensaje FINISH. ¡Disfrute!
+   
+   Al finalizar se mostratá lo siguiente en pantalla :
+  
+   
+   ![image](https://github.com/hash6iron/powadcr_IO/assets/118267564/a595ea33-a1df-406e-b2af-a1d72680fb59)
 
 **IMPORTANTE :**
 
@@ -206,16 +190,23 @@ Hay dos formas de realizar éste proceso :
 -----
 El firmware de la pantalla tiene dos maneras de instalarse : a través de un dispositivo USB TTL o introduciendo su firmware en una tarjeta SD e insertarla en el lector que incorpora la pantalla. Solo vamos a describir la segunda opción ya que la pantalla no tiene instalados los conectores del puerto UART al que se debía conectar el USB-TTL.
 
-En la carpeta del proyecto se encuentra una carpeta llamada HMI, y dentro de ella escogeremos la que se llama "powadcr_ifaceTJC - ZX - mode 2". Dentro de ella hay una carpeta llamada build en la que se encuentra un fichero con extensión HMI. Este fichero es el fuente del proyecto de la pantalla por si deseamos modificarlo con el editor HMI de TJC mencionado en la lista de materiales.  En la carpeta build se encuentra el firmware compilado con el nombre 'powadcr_iface.tft' y este es el fichero que debemos copiar a la tarjeta SD para que la pantalla se actualice. La SD deberá estar formateada en FAT32 y es conveniente que el firmware sea el unico contenido que tenga esta tarjeta SD. El firmware se instalará en el momento que pongamos tensión a la pantalla en los pines correspondientes (GND y +5v) y la pantalla no debe tener conectados los pines TX y RX a la placa del AudioKit. La tensión puede sacarse de la placa del AudioKit o bien de cualquier fuente que no sea de más de 5v. En cualquiera de los casos verificar la polaridad antes de meter tensión ya que se puede dañar la pantalla.
+En la carpeta del proyecto se encuentra una carpeta llamada HMI, y dentro de ella escogeremos la que se llama "powadcr_ifaceTJC - ZX - mode 2". Dentro de ella hay una carpeta llamada build en la que se encuentra un fichero con extensión HMI. Este fichero es el fuente del proyecto de la pantalla por si deseamos modificarlo con el editor HMI de TJC mencionado en la lista de materiales.  En la carpeta build se encuentra el firmware compilado con el nombre 'powadcr_iface.tft' y este es el fichero que debemos copiar a la tarjeta SD para que la pantalla se actualice. La SD deberá estar formateada en FAT32 y es conveniente que el firmware sea el unico contenido que tenga esta tarjeta SD. Introducir la tarjeta microSD en la ranura que tiene la placa y el firmware se instalará en el momento que pongamos tensión a la pantalla en los pines correspondientes (GND y +5v). La pantalla no debe tener conectados los pines TX y RX a la placa del AudioKit. La tensión puede sacarse de la placa propia del AudioKit o bien de cualquier fuente que no sea de más de 5v. En cualquiera de los casos verificar la polaridad antes de meter tensión ya que se puede dañar la pantalla.
+
+**IMPORTANTE :**
+
+***El procesoi de actualización de la placa y de la pantalla hay que realizarlo tal y como se describe sólo la primera vez. Una vez instalado el firmware en la placa y pantalla las actualizaciones podrán hacerse mucho más fácilmente :
+         - La placa puede actualizarse por Wifi. Mas adelante se describe el procedimiento para hacerlo.
+         - La pantalla se actualizará copiando en la SD de la placa el fichero del firmware llamado "powadcr_iface.tft" y la pantalla se actualiza al arrancar el POWADCR.
+
 
 ¿Qué puede hacer la versión beta de PowaDCR?
 -----
 ***Esta sección puede sufrir cambios a medida que el proyecto vaya avanzando y puede haber funciones que se vayan añadiendo o quitando en función de las necesidades del proyecto.***
 
 Actualmente el POWADCR cuenta con las siguientes funciones :
-+ Carga de ficheros TAP y TZX para ZX Spectrum 48k, +, 128, +2, +3, ZX Next, N-Go y cualquier otra FPGA que corra los cores de Spectrum y/o ZX Next y que tenga habilitada la carga por audio
++ Carga de ficheros TAP y TZX para ZX Spectrum 48k, +, 128, +2, +3, ZX Next, N-Go y cualquier otra FPGA que corra los cores de Spectrum y/o ZX Next y que tenga habilitada la carga por audio.
 + Carga de ficheros TSX para cualquier ordenador MSX independientemente de la marca y modelo.
-+ Soporte de ficheros TZX con bloques 0x15.
++ Soporte de ficheros TZX con bloques 0x15 (copia exacta de grabación de una cinta o bien es un fichero TZX convertido desde un fichero WAV con la utilidad WAV2TZX).
 + Soporte de ficheros TZX con rutinas de carga especiales como Speedlock y otros sistemas de carga rápida.
 + Control de Volumen independiente de los canales derecho e izquierdo.
 + Selección de señal Mono/Estéreo
@@ -223,11 +214,12 @@ Actualmente el POWADCR cuenta con las siguientes funciones :
 + Grabación en formato TAP de cualquier programa que sea de carga normal y siempre que los bloques tengan cabecera.
 + Activación de detección de silencios tras el final de bloque.
 + Activación de bucle al grabar (la señal que entra por la entrada de la placa se reproduce por la señal de salida).
-+ Filtrado de señal por software. Si no se selecciona el filtro por defecto es de un 10%, pero se recomiuenda que éste filtro se acrive al 20% al realizar cualquier tipo de grabación.
-+ Servidor Web integrado para realizar la actualización del firmware de la placa.
-+ Detección del firmware de la pantalla enla SD de la placa, que permite que se actualice el firmware de la pantalla sin tener que desmontarla ni tener que acceder a la SD de la pantalla
++ Filtrado de señal por software. Si no se selecciona el filtro por defecto es de un 10%, pero se recomienda que éste filtro se acrive al 20% al realizar cualquier tipo de grabación.
++ Puede conectarse acualquier Wifi tipo b/g/n. La configuración debe realizarse mediante un fichero de texto indicando SSID, Password y dirección IP, Máscara y Puerta de enlace que se desee qeu el POWADCR tenga.
++ Servidor Web integrado para realizar la actualización del firmware de la placa. Abriendo cualquier navegador en un pc que esté en la misma red y poniendo http://xx.xx.xx.xx/update# se puede seleccionar el fichero firmware.bin y se actualizará la placa
++ Actualización del firmware de la pantalla si se detecta en la SD de la placa un fichero con nombre "powadcr_iface.tft". De ésta manera se actualizará el firmware de la pantalla sin tener que desmontarla ni tener que acceder a la SD de la pantalla
 
-If you enjoy with this device and you want to colaborate, please.
+Si te gusta este dispositivo colabora, por favor.
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BAWGJFZGXE5GE&source=url"><img src="/doc/paypal_boton.png" /></a>
 
