@@ -195,6 +195,7 @@ En la carpeta del proyecto se encuentra una carpeta llamada HMI, y dentro de ell
 **IMPORTANTE :**
 
 ***El procesoi de actualización de la placa y de la pantalla hay que realizarlo tal y como se describe sólo la primera vez. Una vez instalado el firmware en la placa y pantalla las actualizaciones podrán hacerse mucho más fácilmente :***
+
          ***- La placa puede actualizarse por Wifi. Mas adelante se describe el procedimiento para hacerlo.***
          ***- La pantalla se actualizará copiando en la SD de la placa el fichero del firmware llamado "powadcr_iface.tft" y la pantalla se actualiza al arrancar el POWADCR.***
 
