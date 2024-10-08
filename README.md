@@ -48,7 +48,7 @@ La pantalla táctil LCD elegida para este proyecto es de la marca TJC. Es un mó
 
 Al ser una pantalla compatible con Nextion el funcionamiento es idéntico a la pantalla original. Los proyectos funcionan igual, pero solo es posible abrir con la aplicacion USART HMI de TJC los proyectos que hayan sido generados por esta misma aplicación. No es posible abrir proyectos de Nextion con la aplicación de TJC ni abrir proyectos de TJC con la aplicación original de Nextion aunque en el fondo se trata de la misma aplicación. Han querido hacer los editores HMI incompatibles entre sí aunque una vez compilados eel fichero TFT resultante se puede instalar indistintamente en una pantalla TJC o Nextion.
 
-Actualmente la aplicación USART HMI de TJC sólo se encuentra en Chino, mientras que la aplicación original de Nexion está en Inglés.
+Actualmente la aplicación USART HMI de TJC sólo se encuentra en Chino, mientras que la aplicación original de Nextion está en Inglés.
 
 
 Proceso de carga en Sinclair ZX Spectrum
