@@ -839,35 +839,6 @@ void stopRecording()
                 // La grabación fue parada porque hubo errores
                 // entonces NO salvamos el fichero, lo borramos
                 // Recording STOP
-                //
-                // switch (RECORDING_ERROR)
-                // {
-                //   case 1: //corrupted data
-                //   LAST_MESSAGE = "Recording STOP. Corrupted data."; 
-                //   //      
-                //   delay(1000);        
-                //   break;
-
-                //   case 2:
-                //   // Todos los bytes fueron capturados pero el checksum es incorrecto
-                //   LAST_MESSAGE = "Recording STOP. Error in checksum."; 
-                //   //      
-                //   delay(1000);        
-                //   break;
-
-                //   case 3:
-                //   LAST_MESSAGE = "Recording STOP. ERROR 3"; 
-                //   //      
-                //   delay(1000);
-                //   break;
-
-                //   case 4:
-                //   LAST_MESSAGE = "Recording STOP. Unknow  ERROR"; 
-                //   //      
-                //   delay(1000);        
-                //   break;
-
-                // }
 
                 taprec.terminate(true);
 
@@ -1013,14 +984,14 @@ bool wifiOTASetup()
 
   int trying_wifi = 0;
 
-  while ((WiFi.waitForConnectResult() != WL_CONNECTED)  || trying_wifi > 500)
+  while ((WiFi.waitForConnectResult() != WL_CONNECTED)  || trying_wifi > 10)
   {
     hmi.writeString("statusLCD.txt=\"WiFi Connection failed! - try " + String(trying_wifi) + "\"" );
     trying_wifi++;
     wifiActive = false;
   }  
 
-  if (trying_wifi > 500)
+  if (trying_wifi > 10)
   {
     wifiActive = false;
   }
@@ -1973,7 +1944,7 @@ void setup()
 
     
     hmi.writeString("statusLCD.txt=\"POWADCR " + String(VERSION) + "\"" );   
-    delay(1250);
+    delay(2000);
 
     //SerialHW.println("Setting Audiokit.");
 

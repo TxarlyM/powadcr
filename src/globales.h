@@ -167,7 +167,7 @@ int FILE_LENGTH = 0;
 bool FILE_IS_OPEN = false;
 
 // Schmitt trigger
-int SCHMITT_THR = 0;
+int SCHMITT_THR = 10; //Porcentage
 int LAST_SCHMITT_THR = 0;
 bool EN_SCHMITT_CHANGE = false;
 
@@ -191,7 +191,7 @@ bool SWAP_MIC_CHANNEL = false;
 bool SWAP_EAR_CHANNEL = false;
 //
 String RECORDING_DIR = "/REC";
-bool waitingNextBlock = false;
+//bool waitingNextBlock = false;
 bool FIRSTBLOCKREAD = false;
  
 
