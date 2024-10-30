@@ -46,7 +46,7 @@ La pantalla táctil LCD elegida para este proyecto es de la marca TJC. Es un mó
 + Tamaño: 3,5".
 + Resolución: 480x320.
 
-Al ser una pantalla compatible con Nextion el funcionamiento es idéntico a la pantalla original. Los proyectos funcionan igual, pero solo es posible abrir con la aplicacion USART HMI de TJC los proyectos que hayan sido generados por esta misma aplicación. No es posible abrir proyectos de Nextion con la aplicación de TJC ni abrir proyectos de TJC con la aplicación original de Nextion aunque en el fondo se trata de la misma aplicación. Han querido hacer los editores HMI incompatibles entre sí aunque una vez compilados eel fichero TFT resultante se puede instalar indistintamente en una pantalla TJC o Nextion.
+Para que este tipo de pantalla funcione debe generarse un proyecto con una aplicación propia de la marca de ésta pantalla. Al ser una pantalla compatible con Nextion el funcionamiento es idéntico a la pantalla original. Los proyectos funcionan igual, pero solo es posible abrir con la aplicacion USART HMI de TJC los proyectos que hayan sido generados por esta misma aplicación. No es posible abrir proyectos de Nextion con la aplicación de TJC ni abrir proyectos de TJC con la aplicación original de Nextion aunque en el fondo se trata de la misma aplicación. Han querido hacer los editores HMI incompatibles entre sí aunque una vez compilados el fichero TFT resultante se puede instalar indistintamente en una pantalla TJC o Nextion.
 
 Actualmente la aplicación USART HMI de TJC sólo se encuentra en Chino, mientras que la aplicación original de Nextion está en Inglés.
 
@@ -92,16 +92,16 @@ En esta sección describiremos las piezas necesarias para ensamblar el dispositi
 
 Lista de materiales
 
-+ Placa base: ESP32 Audiokit de AI-Thinker technology: https://docs.ai-thinker.com/es/esp32-audio-kit (Posible sitio de compra. Alliexpress)
++ Placa base: ESP32 Audiokit de AI-Thinker technology: https://docs.ai-thinker.com/es/esp32-audio-kit (Posible sitio de compra. Aliexpress)
 + LCD color de 3,5" 480x320 píxeles. Pantalla táctil resistiva - TJC4832T035_011 resistiva (de bajo precio pero posible descontinuación y sustitución por TJC4832T135_011C capacitiva o TJC4832T135_011R resistiva)
 + Cable XH2.5 a dupont para conectar el LCD al puerto extendido del ESP32 Audiokit
 + Batería 2000mAh 3.7v (opcional no necesaria)
-+ Tarjeta micro SD formateada FAT32 (para contener todos los juegos del ZX Spectrum en TAP y otros formatos para ser utilizados en PowaDCR en el futuro)
++ Tarjeta micro SD formateada FAT32 (para contener todos los juegos del ZX Spectrum en formato TAP/TZX y otros formatos para ser utilizados en PowaDCR en el futuro)
 + Tarjeta Micro SD o interfaz serial FTDI FT232RL para programar el LCD TJC (ambos métodos están disponibles)
 + Cable con conectores estéreo-estéreo macho-macho de 3,5 mm para conectar PowaDCR a Spectrum Next o N-Go o versiones clónicas.
-+ Cable con conector XH2.5 y mono de 3,5 mm para conectar desde la salida del amplificador de PowaDCR al conector EAR en las versiones clásicas de ZX Spectrum (teclado de goma 16K, 48K, Spectrum+ y Spectrum 128K Toastrack)
-+ Versión del editor HMI en chino [http://filedown.tjc1688.com/USARTHMI/USARTHMIsetup_latest.zip]
-+ Entorno Visual Studio Code con las extensiones C/C++, CMAKE y CMAKE Tools
++ Cable con conector XH2.5 ó jack mono de 3,5 mm para conectar desde la salida del amplificador de PowaDCR al conector EAR en las versiones clásicas de ZX Spectrum (teclado de goma 16K, 48K, Spectrum+ y Spectrum 128K Toastrack). Los conectores Jack tanto para entrada o salida de la seña de ZX Spectrum son para señales de línea, mientras que los conectores XH2.5 son solo de salida y ésta está amplificada.
++ Versión del editor HMI en chino para editar el projecto de la pantalla : [http://filedown.tjc1688.com/USARTHMI/USARTHMIsetup_latest.zip]
++ Entorno Visual Studio Code con las extensiones C/C++, CMAKE y CMAKE Tools para editar los fuentes del proyecto y compilarlo.
 
 Hackeando la placa ESP32 Audiokit
 -----
@@ -119,7 +119,7 @@ Para que la placa y la pantalla funcionen hay que instalar el firmware correspon
 En primer lugar voy a describir cómo deben conectarse los elementos descritos en la lista de materiales. Si es posible ésto debe hacerse en el orden que se indica aquí : 
 
 + Conectar el cable incluído con la pantalla HMI de 3,5 en el conector J1 de la pantalla.
-+ Desde ese conector salen 4 cables que deben conectarse en le puerto serie o UART del Audio Kit. Es importante conectarlos correctamente ya que es posible que la placa o la pantalla puedan resultar dañadas. El conector UART de la placa está situado en la parte superior del ESP32 AudioKit (un connector tipo Dupont de 14 pines) y en el que solo vamos a usar la fila superior de ese conector. De estos 7 pines sólo vamos a usar 4 : GND, TX, RX y 3V3. Las conexión entre placa y pantalla debe realizarse  según la siguiente tabla :
++ Desde ese conector salen 4 cables que deben conectarse en el puerto serie o UART del Audio Kit. Es importante conectarlos correctamente ya que es posible que la placa o la pantalla puedan resultar dañadas. El conector UART de la placa está situado en la parte superior del ESP32 AudioKit (un connector tipo Dupont de 14 pines) y en el que solo vamos a usar la fila superior de ese conector. De estos 7 pines sólo vamos a usar 4 : GND, TX, RX y 3V3. Las conexión entre placa y pantalla debe realizarse según la siguiente tabla :
 
 |Pantalla|Pin AudioKit|
 |---|---|
@@ -194,7 +194,7 @@ En la carpeta del proyecto se encuentra una carpeta llamada HMI, y dentro de ell
 
 **IMPORTANTE :**
 
-***El procesoi de actualización de la placa y de la pantalla hay que realizarlo tal y como se describe sólo la primera vez. Una vez instalado el firmware en la placa y pantalla las actualizaciones podrán hacerse mucho más fácilmente :***
+***El proceso de actualización de la placa y de la pantalla hay que realizarlo tal y como se describe sólo la primera vez. Una vez instalado el firmware en la placa y pantalla las actualizaciones podrán hacerse mucho más fácilmente :***
 
          ***- La placa puede actualizarse por Wifi. Mas adelante se describe el procedimiento para hacerlo.***
          ***- La pantalla se actualizará copiando en la SD de la placa el fichero del firmware llamado "powadcr_iface.tft" y la pantalla se actualiza al arrancar el POWADCR.***
@@ -213,11 +213,11 @@ Actualmente el POWADCR cuenta con las siguientes funciones :
 + Selección de señal Mono/Estéreo
 + Selección de frecuencia de la señal de salida.
 + Grabación en formato TAP de cualquier programa que sea de carga normal y siempre que los bloques tengan cabecera.
-+ Activación de detección de silencios tras el final de bloque.
++ Activación de detección de silencios tras el final de cada bloque.
 + Activación de bucle al grabar (la señal que entra por la entrada de la placa se reproduce por la señal de salida).
-+ Filtrado de señal por software. Si no se selecciona el filtro por defecto es de un 10%, pero se recomienda que éste filtro se acrive al 20% al realizar cualquier tipo de grabación.
-+ Puede conectarse acualquier Wifi tipo b/g/n. La configuración debe realizarse mediante un fichero de texto indicando SSID, Password y dirección IP, Máscara y Puerta de enlace que se desee qeu el POWADCR tenga.
-+ Servidor Web integrado para realizar la actualización del firmware de la placa. Abriendo cualquier navegador en un pc que esté en la misma red y poniendo http://xx.xx.xx.xx/update# se puede seleccionar el fichero firmware.bin y se actualizará la placa
++ Filtrado de señal por software. Si no se selecciona el filtro por defecto es de un 10%, pero se recomienda que éste filtro se active al 20% al realizar cualquier tipo de grabación.
++ Puede conectarse acualquier Wifi tipo b/g/n. La configuración debe realizarse mediante un fichero de texto indicando SSID, Password y dirección IP, Máscara y Puerta de enlace que se desee que el POWADCR tenga. En el caso de que este fichero no exista se grabará un fichero con el nombre 'wifi_ori.cfg', que una vez modificado con los datos indicados anteriormente debe grabarse en la SD con el nombre 'wifi.cfg'.
++ Servidor Web integrado para realizar la actualización del firmware de la placa. Abriendo cualquier navegador en un pc que esté en la misma red y poniendo http://xx.xx.xx.xx/update# se puede seleccionar el fichero firmware.bin y se actualizará la placa con el firmware que le indiquemos.
 + Actualización del firmware de la pantalla si se detecta en la SD de la placa un fichero con nombre "powadcr_iface.tft". De ésta manera se actualizará el firmware de la pantalla sin tener que desmontarla ni tener que acceder a la SD de la pantalla
 
 Si te gusta este dispositivo colabora, por favor.
